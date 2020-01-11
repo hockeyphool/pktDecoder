@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="pktDecoder"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;CMake Files\libsrc\;CMake Files\test\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pktDecoder">
+				<Option output="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/libpktDecoder.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/scottt/projects/personal/pktDecoder"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/x86_64-linux-gnu/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0/backward"/>
+					<Add directory="/usr/include/clang/6.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/llvm-6.0/lib/clang/6.0.0/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 pktDecoder"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pktDecoder/fast">
+				<Option output="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/libpktDecoder.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/scottt/projects/personal/pktDecoder"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/x86_64-linux-gnu/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0/backward"/>
+					<Add directory="/usr/include/clang/6.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/llvm-6.0/lib/clang/6.0.0/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 pktDecoder/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pktDecoderTest">
+				<Option output="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/pktDecoderTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/scottt/projects/personal/pktDecoder,"/>
+					<Add directory="/home/scottt/projects/personal/pktDecoder/test/../libsrc"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/x86_64-linux-gnu/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0/backward"/>
+					<Add directory="/usr/include/clang/6.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/llvm-6.0/lib/clang/6.0.0/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 pktDecoderTest"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pktDecoderTest/fast">
+				<Option output="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/pktDecoderTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/scottt/projects/personal/pktDecoder,"/>
+					<Add directory="/home/scottt/projects/personal/pktDecoder/test/../libsrc"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/x86_64-linux-gnu/c++/7.4.0"/>
+					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/7.4.0/../../../../include/c++/7.4.0/backward"/>
+					<Add directory="/usr/include/clang/6.0.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/lib/llvm-6.0/lib/clang/6.0.0/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 pktDecoderTest/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/libsrc/pkt_decoder.cpp">
+			<Option target="pktDecoder"/>
+		</Unit>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/libsrc/pkt_decoder.h">
+			<Option target="pktDecoder"/>
+		</Unit>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/test/test_pkt_decoder.cpp">
+			<Option target="pktDecoderTest"/>
+		</Unit>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/libsrc/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libsrc\"/>
+		</Unit>
+		<Unit filename="/home/scottt/projects/personal/pktDecoder/test/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\test\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

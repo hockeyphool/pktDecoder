@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/scottt/projects/personal/pktDecoder/libsrc/pkt_decoder.cpp
+pkt_decoder.h
+/home/scottt/projects/personal/pktDecoder/libsrc/pkt_decoder.h
+iostream
+-
+
+/home/scottt/projects/personal/pktDecoder/libsrc/pkt_decoder.h
+cstdint
+-
+cstdlib
+-
+

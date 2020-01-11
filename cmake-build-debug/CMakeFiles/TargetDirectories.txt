@@ -1,8 +1,0 @@
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/CMakeFiles/rebuild_cache.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/CMakeFiles/pktDecoder.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/libsrc/CMakeFiles/edit_cache.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/CMakeFiles/rebuild_cache.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/CMakeFiles/pktDecoderTest.dir
-/home/scottt/projects/personal/pktDecoder/cmake-build-debug/test/CMakeFiles/edit_cache.dir

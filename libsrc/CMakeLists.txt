@@ -5,6 +5,11 @@ if ( POLICY CMP0025 )
 endif ()
 project( pktDecoder )
 
+set( SOURCES pkt_decoder.cpp )
+set( HEADERS pkt_decoder.h )
+
 include_directories( ${CMAKE_SOURCE_DIR} )
 
-add_library( pktDecoder pkt_decoder.cpp pkt_decoder.h )
+add_library( pktdecoder ${SOURCES} ${HEADERS} )
+
+target_link_libraries( pktdecoder )

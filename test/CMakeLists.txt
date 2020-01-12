@@ -6,15 +6,15 @@ endif ()
 
 project( pktDecoder )
 
-set( PROJECT_LINK_LIBS libpktDecoder.so )
-link_directories( ../libsrc )
-
 include_directories(
-      ${CMAKE_SOURCE_DIR},
-      ../libsrc )
+      ${TEST_SOURCE_DIR}/libsrc
+      ${CMAKE_SOURCE_DIR} )
 
 set( SOURCES test_pkt_decoder.cpp )
 set( HEADERS catch.hpp )
 
 add_executable( pktDecoderTest test_pkt_decoder.cpp )
-target_link_libraries( pktDecoderTest ${PROJECT_LINK_LIBS} )
+target_link_libraries(
+      pktDecoderTest
+      pktdecoder )
+add_test( NAME PktDecoder COMMAND pktDecoderTest )

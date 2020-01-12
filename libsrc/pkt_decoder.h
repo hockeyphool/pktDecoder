@@ -10,6 +10,11 @@ extern "C"
 #endif
 #define MAX_DECODED_DATA_LENGTH ( 512 )
 
+   const uint8_t STX = 0x02;
+   const uint8_t ETX = 0x03;
+   const uint8_t DLE = 0x10;
+   const uint8_t ENC = 0x20;
+
    class PacketDecoder;
 
    typedef struct PacketDecoder pkt_decoder_t;
@@ -31,6 +36,8 @@ extern "C"
       uint8_t* m_pktByteList;
       pkt_read_fn_t m_readCallback;
       void* m_callbackCtx;
+      bool m_pktValid;
+      size_t m_pktByteListIdx;
    };
 
 #ifdef __cplusplus

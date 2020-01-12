@@ -1,22 +1,21 @@
 #include "pkt_decoder.h"
 
 #include <cstring>
-#include <iostream>
-#include <sstream>
 
 PacketDecoder::PacketDecoder( pkt_read_fn_t readCallback, void* callbackCtx )
-   : m_pktByteList( nullptr ),
-     m_readCallback( readCallback ),
-     m_callbackCtx( callbackCtx ),
+   : m_packetBuffer( nullptr ),
+     m_pktBufIdx( 0 ),
      m_pktValid( false ),
-     m_pktByteListIdx( 0 )
+     m_readCallback( readCallback ),
+     m_callbackCtx( callbackCtx )
 {
 }
 
 pkt_decoder_t* pkt_decoder_create( pkt_read_fn_t callback, void* callback_ctx )
 {
    auto* decoder = new PacketDecoder( callback, callback_ctx );
-   decoder->m_pktByteList = new uint8_t[0];
+   decoder->m_packetBuffer = new uint8_t[ MAX_DECODED_DATA_LENGTH ];
+   decoder->clearBuffer();
    return decoder;
 }
 
@@ -24,20 +23,19 @@ void pkt_decoder_destroy( pkt_decoder_t* decoder )
 {
    decoder->m_readCallback = nullptr;
    decoder->m_callbackCtx = nullptr;
-   delete decoder->m_pktByteList;
+   delete decoder->m_packetBuffer;
    delete decoder;
 }
 
 void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8_t* data )
 {
-   std::ostringstream oss;
    bool deStuffNextByte( false );
 
-   // Reset the packet byte buffer index if we don't have a valid packet in progress (allows the
+   // Clear the packet byte buffer if we don't have a valid packet in progress (allows the
    // writer to handle packets that span calls)
    if ( !decoder->m_pktValid )
    {
-      decoder->m_pktByteListIdx = 0;
+      decoder->clearBuffer();
    }
 
    for ( size_t idx = 0; idx < length; ++idx )
@@ -45,25 +43,21 @@ void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8
       switch ( data[ idx ] )
       {
          case STX: {
-            if ( decoder->m_pktValid )
-            {
-               oss.str( "" );
-               oss << "WARNING: found STX with packet in progress; deleting previous packet data";
-               std::cerr << oss.str() << std::endl;
-            }
-            memset( decoder->m_pktByteList, 0, decoder->m_pktByteListIdx );
-            decoder->m_pktByteListIdx = 0;
+            // If we already have a packet in progress this will cause it to be silently dropped
+            decoder->clearBuffer();
             decoder->m_pktValid = true;
          }
          break;
          case ETX: {
-            decoder->m_pktValid = false;
-            if ( decoder->m_readCallback )
+            // do NOT call the callback function if a) we're not working on a valid packet, b) we
+            // haven't inserted any decoded bytes into the packet buffer, or c) we don't have a
+            // valid callback pointer
+            if ( decoder->m_pktValid && ( decoder->m_pktBufIdx > 0 ) && decoder->m_readCallback )
             {
-               decoder->m_readCallback( decoder->m_callbackCtx,
-                                        sizeof( decoder->m_pktByteList ),
-                                        decoder->m_pktByteList );
+               decoder->m_readCallback(
+                  decoder->m_callbackCtx, decoder->m_pktBufIdx, decoder->m_packetBuffer );
             }
+            decoder->m_pktValid = false;
          }
          break;
          case DLE: {
@@ -77,12 +71,28 @@ void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8
                uint8_t currentByte = data[ idx ];
                if ( deStuffNextByte )
                {
-                  currentByte |= ENC;
+                  currentByte &= ~ENC;
                   deStuffNextByte = false;
                }
-               decoder->m_pktByteList[ decoder->m_pktByteListIdx++ ] = currentByte;
+               if ( MAX_DECODED_DATA_LENGTH > decoder->m_pktBufIdx )
+               {
+                  decoder->m_packetBuffer[ decoder->m_pktBufIdx++ ] = currentByte;
+               }
+               else
+               {
+                  // Silently fail because this byte will exceed the allowed maximum packet
+                  // length, and prevent handling of any further bytes until a new STX is received
+                  decoder->clearBuffer();
+                  decoder->m_pktValid = false;
+               }
             }
          }
       }
    }
+}
+
+void PacketDecoder::clearBuffer()
+{
+   memset( this->m_packetBuffer, 0, MAX_DECODED_DATA_LENGTH );
+   this->m_pktBufIdx = 0;
 }

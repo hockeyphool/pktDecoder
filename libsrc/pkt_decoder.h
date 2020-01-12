@@ -32,12 +32,13 @@ extern "C"
     public:
       PacketDecoder( pkt_read_fn_t, void* );
       virtual ~PacketDecoder() = default;
+      void clearBuffer();
 
-      uint8_t* m_pktByteList;
+      uint8_t* m_packetBuffer;
+      size_t m_pktBufIdx;
+      bool m_pktValid;
       pkt_read_fn_t m_readCallback;
       void* m_callbackCtx;
-      bool m_pktValid;
-      size_t m_pktByteListIdx;
    };
 
 #ifdef __cplusplus

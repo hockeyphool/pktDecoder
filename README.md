@@ -27,23 +27,23 @@ Processes the passed-in byte stream. This method looks for **STX**, **DLE**, and
 - **DLE** -- Recognizes that the next byte needs to be unstuffed before being added to the packet. This allows the byte stream to include **STX**, **DLE**, and **ETX** characters
 - **ETX** -- Completes processing of a packet, and calls the callback function (if provided). 
 
--- **NOTE** The callback will not be called if the current packet buffer is empty (e.g. the packet decoder received a byte stream that did not include a **STX** control character)
+**NOTE** The callback will not be called if the current packet buffer is empty (e.g. the packet decoder received a byte stream that did not include a **STX** control character)
 Bytes other than these control characters will be added to the in-progress packet buffer once **STX** has been seen.
 
--- **NOTE** The library will allow a maxiumum of 512 bytes to be processed. If the library is given data that exceeds this limit (post-processing) it will silently discard the in-progress packet buffer and stop processing any new bytes until another **STX** character is received.
+**NOTE** The library will allow a maxiumum of 512 bytes to be processed. If the library is given data that exceeds this limit (post-processing) it will silently discard the in-progress packet buffer and stop processing any new bytes until another **STX** character is received.
 
 ## Usage
 To make use of the `libpktdecoder` library:
 1. Include `pkt_decoder.h` in your source
-2. Link your source to `libpktdecoder.a` (Manually copy the built library to the library directory where you wish)
-3. Define a callback method to receive the processed packets
-4. Create a packet decoder instance, and use the `pkt_write_bytes()` method to pass it streams of bytes to process
+1. Link your source to `libpktdecoder.a`
+1. Define a callback method to receive the processed packets
+1. Create a packet decoder instance, and use the `pkt_write_bytes()` method to pass it streams of bytes to process
 - Ensure your byte stream starts with a **STX** character. (Any preceding characters will be ignored)
 - If you need to include **STX**, **ETX**, or **DLE** characters in the packet data, do the following:
--- Insert a **DLE** character in the byte stream
--- Byte-stuff the intended character by performing a bitwise **OR** with the value `0x020`
+1. Insert a **DLE** character in the byte stream
+1. Byte-stuff the intended character by performing a bitwise **OR** with the value `0x020`
 `uint8_t new_char( STX | 0x20);`
--- Insert the byte-stuffed character in the stream after the **DLE** 
+1. Insert the byte-stuffed character in the stream after the **DLE** 
 - Ensure your byte stream ends with a **ETX** character. (Any trailing characters will be ignored)
 
 Take a look at `example.cpp` in the `src` folder to see how the use the library methods

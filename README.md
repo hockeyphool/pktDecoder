@@ -1,5 +1,5 @@
 # pktDecoder
-simple DLE/STX/ETX packet framer/decoder
+A simple DLE/STX/ETX packet framer/decoder library
 
 ## Description
 This project implements the `libpktdecoder` static library to process byte streams and find packets framed with **Start of Text** (STX - 0x02) and **End of Text** (ETX - 0x03) markers. If the bytestream needs to include a control character it will be preceded by a **Data Link Escape** (DLE - 0x10) marker, and will be byte-stuffed by *OR*-ing it with an encoding character (0x20).
@@ -25,9 +25,12 @@ Deletes a PacketDecoder object and associated memory.
 Processes the passed-in byte stream. This method looks for **STX**, **DLE**, and **ETX** markers and handles them as follows:
 - **STX** -- Starts a new packet. If a packet was already in progress it will be silently dropped.
 - **DLE** -- Recognizes that the next byte needs to be unstuffed before being added to the packet. This allows the byte stream to include **STX**, **DLE**, and **ETX** characters
-- **ETX** -- Completes processing of a packet, and calls the callback function (if provided). **NOTE** The callback will not be called if the current packet buffer is empty (e.g. the packet decoder received a byte stream that did not include a **STX** control character)
+- **ETX** -- Completes processing of a packet, and calls the callback function (if provided). 
+
+-- **NOTE** The callback will not be called if the current packet buffer is empty (e.g. the packet decoder received a byte stream that did not include a **STX** control character)
 Bytes other than these control characters will be added to the in-progress packet buffer once **STX** has been seen.
-**NOTE** The library will allow a maxiumum of 512 bytes to be processed. If the library is given data the exceeds this number of bytes (post-processing) it will silently discard the in-progress packet buffer and stop processing any new bytes until another **STX** character is received.
+
+-- **NOTE** The library will allow a maxiumum of 512 bytes to be processed. If the library is given data that exceeds this limit (post-processing) it will silently discard the in-progress packet buffer and stop processing any new bytes until another **STX** character is received.
 
 ## Usage
 To make use of the `libpktdecoder` library:

@@ -18,9 +18,6 @@ After cloning the repository:
 1. `make`
 1. `make test`
 
-To see more verbose unit test output, run the following from the command line:
-`./test/pktDecoderTest --success`
-
 Afterward you can run `./src/example` to verify the library is usable.
 
 ## Installation

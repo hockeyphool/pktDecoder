@@ -14,9 +14,9 @@ The unit-test framework is implemented with [Catch2](https://github.com/catchorg
 
 ## Building
 After cloning the repository:
-1. cmake .
-2. make
-3. make test
+1. `cmake .`
+2. `make`
+3. `make test`
 
 To see more verbose unit test output, run the following from the command line:
 `./test/pktDecoderTest --success`

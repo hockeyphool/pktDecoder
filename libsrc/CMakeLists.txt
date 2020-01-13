@@ -13,3 +13,9 @@ include_directories( ${CMAKE_SOURCE_DIR} )
 add_library( pktdecoder ${SOURCES} ${HEADERS} )
 
 target_link_libraries( pktdecoder )
+
+install( TARGETS pktdecoder
+      CONFIGURATIONS Release
+      DESTINATION /tmp/lib
+      LIBRARY
+      COMPONENT library )

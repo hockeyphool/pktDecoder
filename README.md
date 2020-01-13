@@ -41,8 +41,7 @@ To make use of the `libpktdecoder` library:
 - Ensure your byte stream starts with a **STX** character. (Any preceding characters will be ignored)
 - If you need to include **STX**, **ETX**, or **DLE** characters in the packet data, do the following:
 1. Insert a **DLE** character in the byte stream
-1. Byte-stuff the intended character by performing a bitwise **OR** with the value `0x020`
-`uint8_t new_char( STX | 0x20);`
+1. Byte-stuff the intended character by performing a bitwise **OR** with the value `0x020`. Example: `uint8_t new_char( STX | 0x20);`
 1. Insert the byte-stuffed character in the stream after the **DLE** 
 - Ensure your byte stream ends with a **ETX** character. (Any trailing characters will be ignored)
 

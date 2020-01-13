@@ -10,6 +10,30 @@ using std::ostringstream;
 using std::string;
 using std::strncmp;
 
+bool callbackWasCalled( false );
+u_int8_t numCallbacks( 0 );
+
+static void myCallbackFunc( void* ctx, size_t bufferLength, const uint8_t* dataBuffer )
+{
+   ( void )ctx;
+   ostringstream oss;
+   oss << "Received buffer (length = " << bufferLength << ")";
+   cout << oss.str() << endl;
+   numCallbacks++;
+   callbackWasCalled = true;
+}
+
+struct CleanupListener : Catch::TestEventListenerBase
+{
+   using TestEventListenerBase::TestEventListenerBase;
+   void sectionEnded( Catch::SectionStats const& sectionStats ) override
+   {
+      numCallbacks = 0;
+      callbackWasCalled = false;
+   }
+};
+CATCH_REGISTER_LISTENER( CleanupListener );
+
 TEST_CASE( "Validate packet decoder construction & destruction", "[management]" )
 {
    SECTION( "Create a packet decoder" )
@@ -65,61 +89,51 @@ TEST_CASE( "Verify packet decoder internals", "[internals]" )
    }
 }
 
-bool callbackCalled( false );
-static void myCallbackFunc( void* ctx, size_t bufferLength, const uint8_t* dataBuffer )
-{
-   ( void )ctx;
-   ostringstream oss;
-   oss << "Received buffer (length = " << bufferLength << ")";
-   cout << oss.str() << endl;
-   callbackCalled = true;
-}
-
 TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
 {
    SECTION( "Verify ETX by itself doesn't result in a callback" )
    {
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( ETX ), &ETX );
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
 
       pkt_decoder_destroy( decoder );
    }
 
    SECTION( "Simple two-byte packet" )
    {
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       const uint8_t BYTESTREAM[] = { STX, 0x4f, 0x4b, ETX };
       ostringstream expVal;
       expVal << "OK";
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM ), BYTESTREAM );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
       REQUIRE( strncmp( expVal.str().c_str(), ( char* )decoder->m_packetBuffer, 2 ) == 0 );
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 
    SECTION( "Simple byte-stuffed packet" )
    {
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       const uint8_t BYTE_STUFFED_VAL( DLE | ENC );
       const uint8_t BYTESTREAM[] = { STX, DLE, BYTE_STUFFED_VAL, ETX };
       const uint8_t EXPECTED_VALUE( BYTE_STUFFED_VAL & ~ENC );
 
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM ), BYTESTREAM );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
       REQUIRE( EXPECTED_VALUE == decoder->m_packetBuffer[ 0 ] );
 
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 
    SECTION( "Verify a packet that spans writes" )
    {
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       const uint8_t BYTESTREAM_START[] = { STX, 0x53, 0x63 };
       const uint8_t BYTESTREAM_END[] = { 0x6f, 0x74, 0x74, ETX };
       const string EXPECTED_VAL( "Scott" );
@@ -128,13 +142,13 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_START ), BYTESTREAM_START );
       REQUIRE( decoder->m_pktValid );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_END ), BYTESTREAM_END );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
       REQUIRE(
          strncmp( EXPECTED_VAL.c_str(), ( char* )decoder->m_packetBuffer, EXPECTED_VAL.size() )
          == 0 );
 
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 
    SECTION( "Verify a max-size packet is handled" )
@@ -144,7 +158,7 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
                                       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
       const size_t MAX_FRAMES( MAX_DECODED_DATA_LENGTH / sizeof( LARGE_FRAME ) );
 
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
 
       // start packet decoding
@@ -161,13 +175,13 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
 
       // Finish the packet
       pkt_decoder_write_bytes( decoder, sizeof( ETX ), &ETX );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
 
       // Confirm we're at the limit
       REQUIRE( MAX_DECODED_DATA_LENGTH == decoder->m_pktBufIdx );
 
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 
    SECTION( "Verify a too-large packet silently fails" )
@@ -177,7 +191,7 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
                                       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
       const size_t MAX_FRAMES( MAX_DECODED_DATA_LENGTH / sizeof( LARGE_FRAME ) );
 
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
 
       // start packet decoding
@@ -201,7 +215,7 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
 
       // verify callback isn't called
       pkt_decoder_write_bytes( decoder, 1, &ETX );
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
 
       pkt_decoder_destroy( decoder );
    }
@@ -210,10 +224,10 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
    {
       const uint8_t BYTESTREAM[] = { STX, ETX };
 
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM ), BYTESTREAM );
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
 
       pkt_decoder_destroy( decoder );
    }
@@ -224,11 +238,12 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
       const uint8_t BYTESTREAM_END[] = { 0x05, 0x06, DLE, 0x30, ETX, 0x07, 0x08, 0x09 };
       const uint8_t EXPECTED_VALUE[] = { 0x01, 0x04, 0x05, 0x06, DLE };
 
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_START ), BYTESTREAM_START );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_END ), BYTESTREAM_END );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
       REQUIRE( sizeof( EXPECTED_VALUE ) == decoder->m_pktBufIdx );
       REQUIRE( strncmp( ( char* )EXPECTED_VALUE,
                         ( char* )decoder->m_packetBuffer,
@@ -236,7 +251,6 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
                == 0 );
 
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 
    SECTION( "Verify incomplete packet is dropped and valid packet is handled" )
@@ -244,10 +258,11 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
       const uint8_t BYTESTREAM[] = { STX, 0x01, 0x02, STX, 0x04, 0x05, ETX };
       const uint8_t EXPECTED_VALUE[] = { 0x04, 0x05 };
 
-      REQUIRE( !callbackCalled );
+      REQUIRE( !callbackWasCalled );
       pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
       pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM ), BYTESTREAM );
-      REQUIRE( callbackCalled );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
       REQUIRE( sizeof( EXPECTED_VALUE ) == decoder->m_pktBufIdx );
       REQUIRE( strncmp( ( char* )EXPECTED_VALUE,
                         ( char* )decoder->m_packetBuffer,
@@ -255,6 +270,5 @@ TEST_CASE( "Validate packet decoding & callbacks", "[validation]" )
                == 0 );
 
       pkt_decoder_destroy( decoder );
-      callbackCalled = false;
    }
 }

@@ -12,8 +12,8 @@ A PacketDecoder object
 `typedef void ( *pkt_read_fn_t )( void* ctx, size_t data_length, const uint8_t* data )`
 Signature for the user-provided callback function
 
-### Library Methods
-The packet decoder library provides the following methods:
+### Library Entry Points
+The packet decoder library provides the following methods as entry points:
 
 `pkt_decoder_t* pkt_decoder_create( pkt_read_fn_t callback, void* callback_ctx )`
 Creates and initializes an instance of a PacketDecoder and returns a pointer to the object. The user is responsible for providing the pointers to the callback function and callback context; either can be a *nullptr*.

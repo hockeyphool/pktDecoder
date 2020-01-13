@@ -17,4 +17,7 @@ add_executable( pktDecoderTest test_pkt_decoder.cpp )
 target_link_libraries(
       pktDecoderTest
       pktdecoder )
-add_test( NAME PktDecoder COMMAND pktDecoderTest )
+
+include( Catch.cmake )
+include( ParseAndAddCatchTests.cmake )
+catch_discover_tests( pktDecoderTest )

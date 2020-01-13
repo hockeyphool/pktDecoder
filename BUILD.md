@@ -22,3 +22,10 @@ To see more verbose unit test output, run the following from the command line:
 `./test/pktDecoderTest --success`
 
 Afterward you can run `./src/example` to verify the library is usable.
+
+## Installation
+The library's `CMakeLists.txt` configuration defines a **Release** installation target (default location is `/tmp/lib`). if you wish to install the library:
+1. Edit `libsrc/CMakeLists.txt` and change the `install` **DESTINATION** to the directory you wish to use.
+2. `cmake -DCMAKE_BUILD_TYPE=Release .`
+3. `make && make test`
+4. Either `make install` (if you have permission to write in your installation directory) or `sudo make install` (if your installation directory requires super-user permission to install)

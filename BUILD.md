@@ -10,7 +10,7 @@ Developed and tested on **Ubuntu 18.04 (Bionic Beaver)**, with the following
 - `cmake version 3.10.2`
 - `GNU Make 4.1`
 
-The unit-test framework is implemented with [Catch2][https://github.com/catchorg/Catch2].
+The unit-test framework is implemented with [Catch2](https://github.com/catchorg/Catch2).
 
 ## Building
 After cloning the repository:

@@ -19,3 +19,6 @@ install( TARGETS pktdecoder
       DESTINATION /tmp/lib
       LIBRARY
       COMPONENT library )
+
+install( FILES pkt_decoder.h
+      DESTINATION /tmp/include )

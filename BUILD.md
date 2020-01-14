@@ -26,3 +26,27 @@ The library's `CMakeLists.txt` configuration defines a **Release** installation 
 1. `cmake -DCMAKE_BUILD_TYPE=Release .`
 1. `make && make test`
 1. Either `make install` (if you have permission to write in your installation directory) or `sudo make install` (if your installation directory requires super-user permission to install)
+
+## Testing Details
+These are the unit tests:
+### Validate packet decoder construction & destruction
+- Create a packet decoder
+- Destroy a packet decoder
+### Verify packet decoder internals
+- Verify internal variables - simple packet
+- Verify internal variable changes - multi-stream writes
+### Validate packet decoding & callbacks - Valid packets
+- Verify a simple two-byte packet
+- Verify a simple byte-stuffed packet
+- Verify a packet that spans writes
+- Verify a max-size packet is handled
+- Verify extraneous bytes are discarded
+- Verify multiple packets in one byte stream are all handled
+- Verify that every possible byte value is handled
+- Validate a packet with DLE in one stream and a byte-stuffed value in the next is handled correctly
+- Verify a hanging DLE doesn't throw a wrench in the works
+### Validate packet decoding & callbacks - Invalid packets
+- Verify ETX by itself doesn't result in a callback
+- Verify a too-large packet silently fails
+- Verify empty packet is silently dropped
+- Verify incomplete packet is dropped and valid packet is handled

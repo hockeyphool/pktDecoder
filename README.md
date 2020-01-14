@@ -7,21 +7,26 @@ This project implements the `libpktdecoder` static library to process byte strea
 ## Library Contents
 ### Library Definitions
 `typedef struct PacketDecoder pkt_decoder_t`
+
 A PacketDecoder object
 
 `typedef void ( *pkt_read_fn_t )( void* ctx, size_t data_length, const uint8_t* data )`
+
 Signature for the user-provided callback function
 
 ### Library Entry Points
 The packet decoder library provides the following methods as entry points:
 
 `pkt_decoder_t* pkt_decoder_create( pkt_read_fn_t callback, void* callback_ctx )`
+
 Creates and initializes an instance of a PacketDecoder and returns a pointer to the object. The user is responsible for providing the pointers to the callback function and callback context; either can be a *nullptr*.
 
 `void pkt_decoder_destroy( pkt_decoder_t* decoder )`
+
 Deletes a PacketDecoder object and associated memory.
 
 `void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t len, const uint8_t* data )`
+
 Processes the passed-in byte stream. This method looks for **STX**, **DLE**, and **ETX** markers and handles them as follows:
 - **STX** -- Starts a new packet. If a packet was already in progress it will be silently dropped.
 - **DLE** -- Recognizes that the next byte needs to be unstuffed before being added to the packet. This allows the byte stream to include **STX**, **DLE**, and **ETX** characters
@@ -33,7 +38,7 @@ Bytes other than these control characters will be added to the in-progress packe
 **NOTE** The library will allow a maxiumum of 512 bytes to be processed. If the library is given data that exceeds this limit (post-processing) it will silently discard the in-progress packet buffer and stop processing any new bytes until another **STX** character is received.
 
 ## Usage
-To make use of the `libpktdecoder` library:
+To use the `libpktdecoder` library:
 1. Include `pkt_decoder.h` in your source
 1. Link your source to `libpktdecoder.a`
 1. Define a callback method to receive the processed packets

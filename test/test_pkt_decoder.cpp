@@ -4,10 +4,7 @@
 #include <cstring>
 #include <libsrc/pkt_decoder.h>
 
-using std::cout;
-using std::endl;
 using std::ostringstream;
-using std::strncmp;
 
 // Test state variables
 bool callbackWasCalled( false );
@@ -99,7 +96,7 @@ TEST_CASE( "Verify packet decoder internals", "[internals]" )
 
 TEST_CASE( "Validate packet decoding & callbacks - Valid packets", "[validation]" )
 {
-   SECTION( "Simple two-byte packet" )
+   SECTION( "Verify a simple two-byte packet" )
    {
       REQUIRE_FALSE( callbackWasCalled );
       const uint8_t BYTESTREAM[] = { STX, 0x4f, 0x4b, ETX };
@@ -113,7 +110,7 @@ TEST_CASE( "Validate packet decoding & callbacks - Valid packets", "[validation]
       pkt_decoder_destroy( decoder );
    }
 
-   SECTION( "Simple byte-stuffed packet" )
+   SECTION( "Verify a simple byte-stuffed packet" )
    {
       REQUIRE_FALSE( callbackWasCalled );
       const uint8_t BYTE_STUFFED_VAL( DLE | ENC );
@@ -252,6 +249,52 @@ TEST_CASE( "Validate packet decoding & callbacks - Valid packets", "[validation]
 
       pkt_decoder_destroy( decoder );
    }
+
+   SECTION( "Validate a packet with DLE in one stream and a byte-stuffed value in the next is "
+            "handled correctly" )
+   {
+      const uint8_t BYTESTREAM_START[] = { STX, 0x01, DLE };
+      const uint8_t BYTESTREAM_END[] = { 0x30, 0x05, ETX };
+      const uint8_t EXPECTED_VALUE[] = { 0x01, DLE, 0x05 };
+
+      REQUIRE_FALSE( callbackWasCalled );
+      pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
+      pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_START ), BYTESTREAM_START );
+      REQUIRE( decoder->m_deStuffNextByte );
+      pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_END ), BYTESTREAM_END );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
+      REQUIRE( actualBufferLength == 3 );
+      REQUIRE( strncmp( ( char* )EXPECTED_VALUE,
+                        ( char* )decoder->m_packetBuffer,
+                        sizeof( EXPECTED_VALUE ) )
+               == 0 );
+
+      pkt_decoder_destroy( decoder );
+   }
+
+   SECTION( "Verify a hanging DLE doesn't throw a wrench in the works" )
+   {
+      const uint8_t BYTESTREAM_START[] = { STX, 0x01, DLE };
+      const uint8_t BYTESTREAM_END[] = { STX, 0x04, 0x05, ETX };
+      const uint8_t EXPECTED_VALUE[] = { 0x04, 0x05 };
+
+      REQUIRE_FALSE( callbackWasCalled );
+      pkt_decoder_t* decoder = pkt_decoder_create( myCallbackFunc, nullptr );
+      pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_START ), BYTESTREAM_START );
+      REQUIRE( decoder->m_deStuffNextByte );
+      pkt_decoder_write_bytes( decoder, sizeof( BYTESTREAM_END ), BYTESTREAM_END );
+      REQUIRE_FALSE( decoder->m_deStuffNextByte );
+      REQUIRE( callbackWasCalled );
+      REQUIRE( numCallbacks == 1 );
+      REQUIRE( actualBufferLength == 2 );
+      REQUIRE( strncmp( ( char* )EXPECTED_VALUE,
+                        ( char* )decoder->m_packetBuffer,
+                        sizeof( EXPECTED_VALUE ) )
+               == 0 );
+
+      pkt_decoder_destroy( decoder );
+   }
 }
 
 TEST_CASE( "Validate packet decoding & callbacks - Invalid packets", "[validation]" )
@@ -293,7 +336,6 @@ TEST_CASE( "Validate packet decoding & callbacks - Invalid packets", "[validatio
 
       // write past limit and verify silent failure
       pkt_decoder_write_bytes( decoder, sizeof( LARGE_FRAME ), LARGE_FRAME );
-      REQUIRE( 0 == decoder->m_pktBufIdx );
       REQUIRE_FALSE( decoder->m_pktValid );
 
       // verify callback isn't called

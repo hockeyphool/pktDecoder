@@ -39,6 +39,7 @@ extern "C"
       bool m_pktValid;
       pkt_read_fn_t m_readCallback;
       void* m_callbackCtx;
+      bool m_deStuffNextByte;
    };
 
 #ifdef __cplusplus

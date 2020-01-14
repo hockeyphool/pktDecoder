@@ -7,7 +7,8 @@ PacketDecoder::PacketDecoder( pkt_read_fn_t readCallback, void* callbackCtx )
      m_pktBufIdx( 0 ),
      m_pktValid( false ),
      m_readCallback( readCallback ),
-     m_callbackCtx( callbackCtx )
+     m_callbackCtx( callbackCtx ),
+     m_deStuffNextByte( false )
 {
 }
 
@@ -29,15 +30,6 @@ void pkt_decoder_destroy( pkt_decoder_t* decoder )
 
 void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8_t* data )
 {
-   bool deStuffNextByte( false );
-
-   // Clear the packet byte buffer if we don't have a valid packet in progress (allows the
-   // writer to handle packets that span calls)
-   if ( !decoder->m_pktValid )
-   {
-      decoder->clearBuffer();
-   }
-
    for ( size_t idx = 0; idx < length; ++idx )
    {
       switch ( data[ idx ] )
@@ -61,7 +53,7 @@ void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8
          }
          break;
          case DLE: {
-            deStuffNextByte = true;
+            decoder->m_deStuffNextByte = true;
          }
          break;
          default: {
@@ -69,10 +61,10 @@ void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8
             if ( decoder->m_pktValid )
             {
                uint8_t currentByte = data[ idx ];
-               if ( deStuffNextByte )
+               if ( decoder->m_deStuffNextByte )
                {
                   currentByte &= ~ENC;
-                  deStuffNextByte = false;
+                  decoder->m_deStuffNextByte = false;
                }
                if ( MAX_DECODED_DATA_LENGTH > decoder->m_pktBufIdx )
                {
@@ -82,7 +74,6 @@ void pkt_decoder_write_bytes( pkt_decoder_t* decoder, size_t length, const uint8
                {
                   // Silently fail because this byte will exceed the allowed maximum packet
                   // length, and prevent handling of any further bytes until a new STX is received
-                  decoder->clearBuffer();
                   decoder->m_pktValid = false;
                }
             }

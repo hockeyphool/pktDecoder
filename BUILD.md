@@ -21,8 +21,8 @@ After cloning the repository:
 Afterward you can run `./src/example` to verify the library is usable.
 
 ## Installation
-The library's `CMakeLists.txt` configuration defines a **Release** installation target (default location is `/tmp/lib`). if you wish to install the library:
-1. Edit `libsrc/CMakeLists.txt` and change the `install` **DESTINATION** to the directory you wish to use.
+The library's `CMakeLists.txt` configuration defines a **Release** installation target (default location is `/tmp/lib` for the library and `/tmp/include` for the header). if you wish to install the library:
+1. Edit `libsrc/CMakeLists.txt` and change the `install` **DESTINATION**  configuration to the directories you wish to use.
 1. `cmake -DCMAKE_BUILD_TYPE=Release .`
 1. `make && make test`
 1. Either `make install` (if you have permission to write in your installation directory) or `sudo make install` (if your installation directory requires super-user permission to install)
